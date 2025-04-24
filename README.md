@@ -111,6 +111,22 @@ The `auto_response.py` script automates email responses to meeting requests usin
 - **Automated Responses**: Generates and sends personalized responses to meeting requests
 - **Email Management**: Marks processed emails as read
 
+### Usage
+
+```bash
+python auto_response.py
+```
+
+When you run the script for the first time, it will prompt you to authorize access to your Google account. Follow the authorization link provided in the terminal to grant the necessary permissions.
+
+The script will then:
+1. Retrieve your recent emails
+2. Identify meeting requests
+3. Send automated responses with your Calendly link
+4. Mark those emails as read
+
+You can set this up as a scheduled task to run periodically (e.g., hourly or daily) to automatically respond to meeting requests.
+
 ### How It Works
 
 1. **Email Retrieval**:

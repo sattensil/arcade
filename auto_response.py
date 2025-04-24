@@ -193,7 +193,8 @@ for meeting_email in meeting_request_emails:
             "owner": "ArcadeAI",
             "name": "arcade-ai",
             "email_id": email_id,
-            "labels_to_remove": "UNREAD"
+            "labels_to_remove": "UNREAD",
+            "labels_to_add": ""
         },
         user_id=ARCADE_USER_ID,
     )
