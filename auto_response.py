@@ -85,23 +85,38 @@ def generate_meeting_response(meeting_details):
         print(f"Error generating meeting response: {e}")
         return "Hi there,\n\nThank you for your email. I'd be happy to meet with you. You can view my availability and schedule a time in one of two ways:\n\n1. Book directly through my Calendly: https://calendly.com/sattensil/new-meeting\n2. Check my calendar availability and send me a calendar invitation for a time that works for both of us\n\nLooking forward to our conversation!\n\nBest regards,\nScarlett"
 
-# Authorize the tool
-auth_response = arcade_client.tools.authorize(
-    tool_name="Google.ListEmails@1.2.1",
-    user_id=ARCADE_USER_ID,
-)
+# Function to authorize a tool
+def authorize_tool(tool_name):
+    print(f"Authorizing {tool_name}...")
+    auth_response = arcade_client.tools.authorize(
+        tool_name=tool_name,
+        user_id=ARCADE_USER_ID,
+    )
+    
+    # Check if authorization is completed
+    if auth_response.status != "completed":
+        print(f"Click this link to authorize: {auth_response.url}")
+    
+    # Wait for the authorization to complete
+    auth_response = arcade_client.auth.wait_for_completion(auth_response)
+    
+    if auth_response.status != "completed":
+        raise Exception(f"Authorization failed for {tool_name}")
+    
+    print(f"✅ {tool_name} authorization successful!")
+    return auth_response
 
-# Check if authorization is completed
-if auth_response.status != "completed":
-    print(f"Click this link to authorize: {auth_response.url}")
+# Authorize all required Google tools
+tools_to_authorize = [
+    "Google.ListEmails@1.2.1",
+    "Google.ReplyToEmail@1.2.1",
+    "Google.ChangeEmailLabels@1.2.1"
+]
 
-# Wait for the authorization to complete
-auth_response = arcade_client.auth.wait_for_completion(auth_response)
+for tool in tools_to_authorize:
+    authorize_tool(tool)
 
-if auth_response.status != "completed":
-    raise Exception("Authorization failed")
-
-print("🚀 Authorization successful!")
+print("🚀 All authorizations successful!")
 
 # Get the last 30 emails
 result = arcade_client.tools.execute(
